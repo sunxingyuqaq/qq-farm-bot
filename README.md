@@ -44,27 +44,6 @@ QQ 农场全自动挂机管理平台 — 多账号、可视化、实时控制
 - **深色 / 浅色主题** 一键切换
 - **移动端适配** — 手机也能正常使用
 
-### 功能开关一览
-
-每个账号可独立配置：
-
-| 开关 | 默认 | 说明 |
-|:---|:---:|:---|
-| 自动收获 | ✅ | 收取成熟作物 |
-| 自动种植 | ✅ | 收获后自动种植最优作物 |
-| 自动施肥 | ✅ | 种植后自动施肥 |
-| 自动除草 | ✅ | 清除杂草 |
-| 自动除虫 | ✅ | 清除害虫 |
-| 自动浇水 | ✅ | 给干旱地块浇水 |
-| 好友巡查 | ✅ | 定时访问好友农场 |
-| 自动偷菜 | ✅ | 偷取好友成熟作物 |
-| 帮好友干活 | ✅ | 帮好友浇水/除草/除虫 |
-| 经验满也帮忙 | ✅ | 帮好友浇水/除草/除虫 |
-| 好友放虫草 | ✅ | 给好友放虫/放草 |
-| 自动任务 | ✅ | 领取任务奖励 |
-| 自动出售 | ✅ | 出售背包果实 |
-| 自动购肥 | ✅ | 施肥时自动购买肥料 |
-
 ---
 
 ## 应用截图
@@ -172,6 +151,78 @@ npm start
 2. 点击「添加账号」
 3. 使用 QQ 扫描二维码
 4. 扫码成功后 Bot 自动启动挂机
+
+---
+
+## Docker 部署
+
+### 一键部署（推荐）
+
+```bash
+git clone https://github.com/your-username/qq-farm-bot.git
+cd qq-farm-bot
+
+# 构建镜像并后台启动
+docker compose up -d --build
+```
+
+首次构建需要 2~5 分钟（下载 Node 镜像 + 安装依赖 + 编译前端），完成后访问 `http://服务器IP:3000`。
+
+### 配置
+
+编辑 `docker-compose.yml` 修改端口和加密密钥：
+
+```yaml
+services:
+  qq-farm-bot:
+    ports:
+      - "3000:3000"        # 修改左边的端口号以更换对外端口
+    environment:
+      - PORT=3000
+      - BOT_ENCRYPT_KEY=你的32位随机密钥  # 生产环境建议修改
+```
+
+> 生成随机密钥：`openssl rand -hex 16`
+
+### 数据持久化
+
+数据库文件通过 volume 挂载到项目目录的 `data/` 文件夹，容器重建后数据不丢失。备份只需复制 `data/farm-bot.db`。
+
+### 常用命令
+
+```bash
+# 查看运行状态
+docker compose ps
+
+# 查看实时日志
+docker compose logs -f
+
+# 停止服务
+docker compose down
+
+# 重启
+docker compose restart
+
+# 更新代码后重新部署
+git pull && docker compose up -d --build
+```
+
+### 国内服务器镜像加速
+
+如果构建时拉取镜像超时，配置 Docker 镜像加速：
+
+```bash
+mkdir -p /etc/docker
+cat > /etc/docker/daemon.json << 'EOF'
+{
+  "registry-mirrors": [
+    "https://docker.1ms.run",
+    "https://docker.xuanyuan.me"
+  ]
+}
+EOF
+systemctl daemon-reload && systemctl restart docker
+```
 
 ---
 
