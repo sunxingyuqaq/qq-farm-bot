@@ -25,6 +25,7 @@ COPY server/ ./server/
 COPY src/ ./src/
 COPY proto/ ./proto/
 COPY gameConfig/ ./gameConfig/
+COPY tools/ ./tools/
 
 # 从阶段1复制前端构建产物
 COPY --from=frontend-builder /app/web/dist ./web/dist
