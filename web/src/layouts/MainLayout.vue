@@ -17,17 +17,24 @@
           style="width: 100%;"
           popper-class="dark-select-popper"
         >
-          <el-option
-            v-for="acc in ownAccounts"
-            :key="acc.uin"
-            :value="acc.uin"
-          >
-            <div style="display:flex;align-items:center;gap:8px;">
-              <img :src="`https://q1.qlogo.cn/g?b=qq&nk=${acc.uin}&s=40`" style="width:22px;height:22px;border-radius:50%;" />
-              <span>{{ acc.nickname || acc.uin }}</span>
-              <span style="margin-left:auto;">{{ acc.status === 'running' ? '🟢' : '⚪' }}</span>
-            </div>
-          </el-option>
+      <el-option
+  v-for="acc in ownAccounts"
+  :key="acc.uin"
+  :value="acc.uin"
+>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <img 
+      :src="`https://q1.qlogo.cn/g?b=qq&nk=${acc.uin}&s=40`" 
+      style="width:22px;height:22px;border-radius:50%;" 
+    />
+    
+    <span>{{ acc.nickname || acc.displayUin }}</span>
+    
+    <span style="margin-left:auto;">
+      {{ acc.status === 'running' ? '🟢' : '⚪' }}
+    </span>
+  </div>
+</el-option>
         </el-select>
       </div>
 

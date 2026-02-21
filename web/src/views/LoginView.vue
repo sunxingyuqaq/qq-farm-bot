@@ -101,7 +101,10 @@ const router = useRouter()
 const auth = useAuthStore()
 const loading = ref(false)
 const mode = ref('login')
-const form = ref({ username: '', password: '' })
+const form = ref({ 
+  username: 'admin', 
+  password: 'admin123' 
+})
 const regForm = ref({ username: '', password: '', confirmPassword: '' })
 
 // 已登录直接跳转

@@ -56,7 +56,11 @@
         :style="{ cursor: acc.isOwn ? 'pointer' : 'default' }"
       >
         <div class="acc-header">
-          <img class="acc-avatar" :src="`https://q1.qlogo.cn/g?b=qq&nk=${acc.uin}&s=100`" :alt="acc.uin" />
+          <img 
+    class="acc-avatar" 
+    :src="acc.avatar" 
+    :alt="acc.isOwn ? acc.uin : '隐藏账号'" 
+  />
           <div class="acc-header-info">
             <div class="acc-header-top">
               <span class="acc-uin">{{ acc.nickname || acc.uin }}</span>
@@ -140,6 +144,7 @@ const showQrDialog = ref(false)
 const qrBase64 = ref('')
 const qrStatus = ref('idle')
 const qrUin = ref('')
+
 
 async function fetchAccounts() {
   loading.value = true

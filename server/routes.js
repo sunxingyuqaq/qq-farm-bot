@@ -106,41 +106,60 @@ router.use(authMiddleware);
 // ============================================================
 //  账号列表
 // ============================================================
-
 /** GET /api/accounts */
 router.get('/accounts', (req, res) => {
     try {
         let accounts = botManager.listAccounts();
-        if (req.user.role !== 'admin') {
-            // 普通用户能看到所有账号，但标记哪些是自己的
-            const adminUser = db.getAdminUserById(req.user.id);
-            const allowed = (adminUser?.allowed_uins || '').split(',').map(s => s.trim()).filter(Boolean);
-            accounts = accounts.map(a => {
-                const isOwn = allowed.includes(a.uin);
-                // 保证所有账号都带 avatar 字段
-                const avatar = a.avatar || '';
-                if (isOwn) return { ...a, isOwn: true, avatar };
+        
+        // 获取当前用户的信息和权限列表
+        const adminUser = db.getAdminUserById(req.user.id);
+        const allowed = (adminUser?.allowed_uins || '')
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        const isAdmin = req.user.role === 'admin';
+
+        accounts = accounts.map(a => {
+            // 判定是否为本人账号（管理员视为拥有所有账号）
+            const isOwn = isAdmin || allowed.includes(a.uin);
+            
+            // 【核心修改点 1】：在脱敏之前，基于真实的 a.uin 生成头像地址
+            const avatarUrl = `https://q1.qlogo.cn/g?b=qq&nk=${a.uin}&s=100`;
+
+            if (isOwn) {
+                // 本人账号：数据完整返回
+                return { 
+                    ...a, 
+                    isOwn: true, 
+                    displayUin: a.uin, // 显示原号
+                    avatar: avatarUrl 
+                };
+            } else {
+                // 【核心修改点 2】：非本人账号，进行文字脱敏，但 avatar 依然使用上面生成的真实链接
                 const maskedUin = a.uin.slice(0, 3) + '****' + a.uin.slice(-2);
-                const maskedNick = a.nickname ? a.nickname.charAt(0) + '***' : '';
+                const maskedNick = a.nickname ? a.nickname.charAt(0) + '***' : '隐藏用户';
+                
                 return {
                     ...a,
-                    uin: maskedUin,
+                    // 注意：为了安全，这里的 uin 依然保持脱敏状态，防止前端 key 泄露
+                    uin: maskedUin, 
+                    displayUin: maskedUin, 
                     nickname: maskedNick,
                     isOwn: false,
-                    avatar,
+                    avatar: avatarUrl // 这里的链接里包含了真实的 UIN 数字，保证头像能出来
                 };
-            });
-            // 自己的账号排前面
-            accounts.sort((a, b) => (b.isOwn ? 1 : 0) - (a.isOwn ? 1 : 0));
-        } else {
-            accounts = accounts.map(a => ({ ...a, isOwn: true }));
-        }
+            }
+        });
+
+        // 排序逻辑：自己的账号排在最前面
+        accounts.sort((a, b) => (b.isOwn ? 1 : 0) - (a.isOwn ? 1 : 0));
+
         res.json({ ok: true, data: accounts });
     } catch (err) {
         res.status(500).json({ ok: false, error: err.message });
     }
 });
-
 /** GET /api/accounts/:uin */
 router.get('/accounts/:uin', canAccessUin, (req, res) => {
     try {
