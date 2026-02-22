@@ -1113,7 +1113,7 @@ class BotInstance extends EventEmitter {
         const skipped = [];
 
         // 帮除草
-        if (status.needWeed.length > 0) {
+        if (status.needWeed.length > 0 && this.featureToggles.friendHelp) {
             if (this.featureToggles.helpEvenExpFull || this._canGetExp(10005)) {
                 this._markExpCheck(10005);
                 let ok = 0;
@@ -1127,7 +1127,7 @@ class BotInstance extends EventEmitter {
             }
         }
         // 帮除虫
-        if (status.needBug.length > 0) {
+        if (status.needBug.length > 0 && this.featureToggles.friendHelp) {
             if (this.featureToggles.helpEvenExpFull || this._canGetExp(10006)) {
                 this._markExpCheck(10006);
                 let ok = 0;
@@ -1141,7 +1141,7 @@ class BotInstance extends EventEmitter {
             }
         }
         // 帮浇水
-        if (status.needWater.length > 0) {
+        if (status.needWater.length > 0 && this.featureToggles.friendHelp) {
             if (this.featureToggles.helpEvenExpFull || this._canGetExp(10007)) {
                 this._markExpCheck(10007);
                 let ok = 0;
@@ -1155,7 +1155,7 @@ class BotInstance extends EventEmitter {
             }
         }
         // 偷菜
-        if (status.stealable.length > 0) {
+        if (status.stealable.length > 0 && this.featureToggles.autoSteal) {
             let ok = 0;
             const stolenPlants = [];
             for (let i = 0; i < status.stealable.length; i++) {
@@ -1204,8 +1204,11 @@ class BotInstance extends EventEmitter {
                 const dryNum = p ? toNum(p.dry_num) : 0;
                 const weedNum = p ? toNum(p.weed_num) : 0;
                 const insectNum = p ? toNum(p.insect_num) : 0;
+                // 根据开关决定是否有事可做
+                const canSteal = this.featureToggles.autoSteal && stealNum > 0;
+                const canHelp = this.featureToggles.friendHelp && (dryNum > 0 || weedNum > 0 || insectNum > 0);
                 // 有可偷 或 有可帮忙 → 访问
-                if (stealNum > 0 || dryNum > 0 || weedNum > 0 || insectNum > 0) {
+                if (canSteal || canHelp) {
                     friendsToVisit.push({ gid, name, level: toNum(f.level), stealNum, dryNum, weedNum, insectNum });
                     visitedGids.add(gid);
                 } else {
