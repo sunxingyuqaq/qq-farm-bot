@@ -17,10 +17,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            export PATH=$PATH:/root/.nvm/versions/node/$(ls /root/.nvm/versions/node)/bin:/usr/local/bin
-            source ~/.bashrc 2>/dev/null || source ~/.profile 2>/dev/null || true
             cd /root/qq-farm-bot
             git pull origin main
-            cd web && npm install && npm run build
-            cd .. && npm install
-            pm2 restart qq-farm-bot || pm2 start server/index.js --name qq-farm-bot
+            docker compose down
+            docker compose up -d --build
