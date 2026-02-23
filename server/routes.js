@@ -243,7 +243,9 @@ router.get('/plant-ranking', (req, res) => {
             if (String(plant.id).startsWith('2020')) continue;
 
             const seedItem = gameConfig.getItemInfo(plant.seed_id);
-            if (seedItem && seedItem.level_limit && seedItem.level_limit > level) continue;
+            const unlockLevel = (seedItem && seedItem.level) ? seedItem.level : 0;
+            // 按种子解锁等级过滤（ItemInfo.json 中的 level 字段）
+            if (unlockLevel > level) continue;
             // 过滤价格为 0 的免费种子（非正常商店种子）
             if (seedItem && seedItem.price === 0) continue;
 
@@ -277,6 +279,7 @@ router.get('/plant-ranking', (req, res) => {
                 id: plant.id,
                 name: plant.name,
                 seedId: plant.seed_id,
+                unlockLevel,
                 exp,
                 seasons,
                 totalExp,
@@ -288,7 +291,64 @@ router.get('/plant-ranking', (req, res) => {
         }
 
         ranking.sort((a, b) => b.expPerHour - a.expPerHour);
-        res.json({ ok: true, data: ranking.slice(0, 50) });
+        res.json({ ok: true, data: ranking });
+    } catch (err) {
+        res.status(500).json({ ok: false, error: err.message });
+    }
+});
+
+/** GET /api/crop-list — 返回全部作物列表，按解锁等级升序排序（用于作物选择下拉框） */
+router.get('/crop-list', (req, res) => {
+    try {
+        const plants = gameConfig.getAllPlants();
+        const list = [];
+
+        for (const plant of plants) {
+            if (!plant.seed_id) continue;
+            if (String(plant.id).startsWith('2020')) continue;
+
+            const seedItem = gameConfig.getItemInfo(plant.seed_id);
+            const unlockLevel = (seedItem && seedItem.level) ? seedItem.level : 0;
+            if (seedItem && seedItem.price === 0) continue;
+
+            const exp = gameConfig.getPlantExp(plant.id) || 0;
+            const growTimeSec = gameConfig.getPlantGrowTime(plant.id) || 0;
+            if (growTimeSec <= 0 || exp <= 0) continue;
+
+            const seasons = plant.seasons || 1;
+
+            let regrowSec = 0;
+            if (seasons > 1 && plant.grow_phases) {
+                const phases = plant.grow_phases.split(';').filter(p => p.trim());
+                const durations = phases.map(seg => {
+                    const m = seg.match(/:(\d+)/);
+                    return m ? parseInt(m[1]) : 0;
+                }).filter(d => d > 0);
+                if (durations.length > 0) regrowSec = durations[durations.length - 1];
+            }
+
+            const totalExp = exp * seasons;
+            const totalTimeSec = growTimeSec + (seasons - 1) * regrowSec;
+            const expPerHour = totalTimeSec > 0 ? Math.round((totalExp / totalTimeSec) * 3600 * 100) / 100 : 0;
+
+            list.push({
+                id: plant.id,
+                name: plant.name,
+                seedId: plant.seed_id,
+                unlockLevel,
+                exp,
+                seasons,
+                totalExp,
+                growTimeSec,
+                regrowSec,
+                totalTimeSec,
+                expPerHour,
+            });
+        }
+
+        // 按解锁等级升序，同等级按经验效率降序
+        list.sort((a, b) => a.unlockLevel - b.unlockLevel || b.expPerHour - a.expPerHour);
+        res.json({ ok: true, data: list });
     } catch (err) {
         res.status(500).json({ ok: false, error: err.message });
     }
