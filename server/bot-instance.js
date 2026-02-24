@@ -131,32 +131,38 @@ class BotInstance extends EventEmitter {
 
         // ---------- 功能开关 (前端可控制) ----------
         this.featureToggles = {
-            autoHarvest: true,
-            autoPlant: true,
-            autoFertilize: true,
-            autoWeed: true,
-            autoPest: true,
-            autoWater: true,
-            autoLandUnlock: true,   // 是否自动解锁新土地
-            autoLandUpgrade: true,  // 是否自动升级土地
-            friendVisit: true,
-            autoSteal: true,
-            friendHelp: true,
-            friendPest: true,
-            autoTask: true,
-            autoSell: true,
-            autoBuyFertilizer: true,
-            helpEvenExpFull: true,
-            skipStealRadish: true,  // 偷菜时跳过白萝卜
-            // 新增功能开关
+            // ========== 农场基础功能 ==========
+            autoHarvest: true,         // 自动收获成熟作物
+            autoPlant: true,           // 自动种植空地
+            autoFertilize: false,       // 自动施肥
+            autoWeed: true,            // 自动除草
+            autoPest: true,            // 自动除虫
+            autoWater: true,           // 自动浇水
+            autoLandUnlock: true,      // 自动解锁新土地（开拓）
+            autoLandUpgrade: true,     // 自动升级土地
+            
+            // ========== 好友互动功能 ==========
+            friendVisit: true,         // 访问好友农场
+            autoSteal: true,           // 自动偷菜
+            friendHelp: true,          // 帮好友除草/除虫/浇水
+            friendPest: true,          // 给好友放虫（损人）
+            helpEvenExpFull: true,     // 经验满了也继续帮忙
+            skipStealRadish: true,     // 偷菜时跳过白萝卜
+            
+            // ========== 系统功能 ==========
+            autoTask: true,            // 自动完成并领取任务
+            autoSell: true,            // 自动卖出仓库作物
+            autoBuyFertilizer: false,   // 自动购买化肥（金币）
+            
+            // ========== 每日奖励功能 ==========
             autoFreeGifts: true,       // 商城免费礼包
             autoShareReward: true,     // 分享奖励
-            autoMonthCard: true,       // 月卡奖励
-            autoEmailReward: true,     // 邮箱奖励
-            autoVipGift: true,         // QQ会员奖励
-            autoIllustrated: true,     // 图鉴奖励
-            autoFertilizerBuy: true,   // 点券购买化肥
-            autoFertilizerUse: true,   // 使用化肥礼包
+            autoMonthCard: true,       // 月卡每日奖励
+            autoEmailReward: true,     // 邮箱奖励自动领取
+            autoVipGift: true,         // QQ会员每日礼包
+            autoIllustrated: true,     // 图鉴奖励自动领取
+            autoFertilizerBuy: false,  // 点券购买化肥（消耗点券，默认关）
+            autoFertilizerUse: false,   // 使用化肥礼包
         };
 
         // ---------- 今日统计 ----------
