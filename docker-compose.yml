@@ -1,8 +1,8 @@
 services:
   qq-farm-bot:
     # 直接拉取线上镜像，实现秒级启动
-    # 【注意】请将下面的 maile456 替换为您实际的 DockerHub 用户名
-    image: maile456/qq-farm-bot:latest
+    # 【注意】请将下面的 maile123 替换为您实际的 DockerHub 用户名
+    image: maile123/qq-farm-bot:latest
     container_name: qq-farm-bot
     restart: unless-stopped
     ports:
