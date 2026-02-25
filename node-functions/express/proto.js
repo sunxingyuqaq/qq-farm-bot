@@ -12,6 +12,7 @@ const types = {};
 async function loadProto() {
     console.log('[Server] 加载 Proto 定义...');
     const protoDir = path.join(__dirname, './');
+    console.log('[Server] 加载 Proto 根对象...', protoDir);
     root = new protobuf.Root();
     await root.load([
         path.join(protoDir, 'game.proto'),
