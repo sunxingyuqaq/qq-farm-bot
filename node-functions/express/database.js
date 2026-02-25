@@ -47,6 +47,8 @@ let db = null;
 
 /** 将 sql.js 查询结果转为对象数组 */
 function queryAll(sql, params = []) {
+    console.log('[DB] SQL:', db == null);
+    console.log('[DB] SQL:', sql);
     const stmt = db.prepare(sql);
     if (params.length) stmt.bind(params);
     const rows = [];
@@ -325,6 +327,7 @@ function saveAnnouncement({ title, content }) {
 
 /** 确保存在默认管理员 (首次运行时) */
 function ensureDefaultAdmin() {
+    console.log('[DB] 正在检查默认管理员');
     const admin = getAdminUser('admin');
     if (!admin) {
         // 默认密码: admin123 (sha256)
@@ -332,6 +335,7 @@ function ensureDefaultAdmin() {
         createAdminUser({ username: 'admin', passwordHash: hash, role: 'admin' });
         console.log('[DB] 已创建默认管理员 admin / admin123');
     }
+    console.log('[DB] 检查默认管理员完成');
 }
 
 function closeDatabase() {

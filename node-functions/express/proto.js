@@ -169,6 +169,7 @@ async function loadProto() {
     types.BatchUseReply = root.lookupType('gamepb.itempb.BatchUseReply');
 
     // Proto 加载完成
+    console.log('[Server] 加载 Proto 完成');
 }
 
 function getRoot() {

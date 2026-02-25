@@ -22,8 +22,9 @@ let itemInfoMap = new Map(); // item_id -> item config
  * 加载配置文件
  */
 function loadConfigs() {
-    const configDir = path.join(__dirname, '..', 'gameConfig');
-    
+    console.log('[配置] 加载配置文件...');
+    const configDir = path.join(__dirname, './');
+
     // 加载等级经验配置
     try {
         const roleLevelPath = path.join(configDir, 'RoleLevel.json');
@@ -39,7 +40,7 @@ function loadConfigs() {
     } catch (e) {
         console.warn('[配置] 加载 RoleLevel.json 失败:', e.message);
     }
-    
+
     // 加载植物配置
     try {
         const plantPath = path.join(configDir, 'Plant.json');
@@ -79,6 +80,7 @@ function loadConfigs() {
     } catch (e) {
         console.warn('[配置] 加载 ItemInfo.json 失败:', e.message);
     }
+    console.log('[配置] 加载配置文件完成');
 }
 
 // ============ 等级经验相关 ============
@@ -98,13 +100,13 @@ function getLevelExpTable() {
  */
 function getLevelExpProgress(level, totalExp) {
     if (!levelExpTable || level <= 0) return { current: 0, needed: 0 };
-    
+
     const currentLevelStart = levelExpTable[level] || 0;
     const nextLevelStart = levelExpTable[level + 1] || (currentLevelStart + 100000);
-    
+
     const currentExp = Math.max(0, totalExp - currentLevelStart);
     const neededExp = nextLevelStart - currentLevelStart;
-    
+
     return { current: currentExp, needed: neededExp };
 }
 
@@ -166,7 +168,7 @@ function getPlantFruit(plantId) {
 function getPlantGrowTime(plantId) {
     const plant = plantMap.get(plantId);
     if (!plant || !plant.grow_phases) return 0;
-    
+
     // 解析 "种子:30;发芽:30;成熟:0;" 格式
     const phases = plant.grow_phases.split(';').filter(p => p);
     let totalSeconds = 0;

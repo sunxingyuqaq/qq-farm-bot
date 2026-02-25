@@ -325,6 +325,7 @@ class BotManager extends EventEmitter {
     // ============================================================
 
     async autoStartBots() {
+        console.log('[BotManager] 正在恢复运行中的账号...')
         const users = db.getAutoStartUsers();
         if (users.length === 0) return;
         console.log(`[BotManager] 自动启动 ${users.length} 个账号...`);
