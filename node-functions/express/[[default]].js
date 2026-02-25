@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 import { Server as SocketServer } from 'socket.io';
-import gameConfig, {loadConfigs} from "./gameConfig";
+import gameConfig from "./gameConfig";
 
 // ---------- 数据库 ----------
 import db from './database';
@@ -13,9 +13,6 @@ import {botManager} from './bot-manager';
 import apiRoutes from './routes';
 import {loadProto} from "./proto";
 import { maskAccountsPublic } from './account-utils';
-
-console.log("加载游戏配置", loadConfigs, SocketServer, gameConfig);
-console.log("加载游戏配置", db, botManager, apiRoutes);
 
 // 初始化配置
 async function initialize() {

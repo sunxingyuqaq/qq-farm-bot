@@ -81,6 +81,7 @@ function saveToFile() {
 let saveTimer = null;
 
 async function initDatabase() {
+    console.log('[DB] 初始化数据库...');
     const SQL = await initSqlJs();
 
     // 如果数据库文件已存在则加载
