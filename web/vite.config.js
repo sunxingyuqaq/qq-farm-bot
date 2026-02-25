@@ -2,15 +2,16 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
+  base: 'express',
   plugins: [vue()],
   server: {
     port: 5173,
     proxy: {
-      '/express/api': {
+      '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
-      '/express/socket.io': {
+      '/socket.io': {
         target: 'http://localhost:3000',
         ws: true,
         changeOrigin: true,
