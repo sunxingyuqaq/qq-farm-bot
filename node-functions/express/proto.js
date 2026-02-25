@@ -15,6 +15,7 @@ async function loadProto() {
     const protoDir = path.join(__dirname, './');
     console.log('[Server] 加载 Proto 根对象...', protoDir);
     root = new protobuf.Root();
+    console.log('[Server] 加载 Proto 根对象root=', root);
     await root.load([
         path.join(protoDir, 'game.proto'),
         path.join(protoDir, 'userpb.proto'),

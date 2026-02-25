@@ -43,12 +43,16 @@ function decrypt(text) {
 // ============ 数据库核心 ============
 
 const DB_PATH = path.join(__dirname, './', 'farm-bot.db');
+console.log('[DB] 数据库文件DB_PATH:', DB_PATH);
 let db = null;
 
 /** 将 sql.js 查询结果转为对象数组 */
 function queryAll(sql, params = []) {
-    console.log('[DB] SQL:', db == null);
-    console.log('[DB] SQL:', sql);
+    if (db == null) {
+        initDatabase().catch(e=> {
+            console.error('[DB] 初始化数据库失败:', e);
+        });
+    }
     const stmt = db.prepare(sql);
     if (params.length) stmt.bind(params);
     const rows = [];
