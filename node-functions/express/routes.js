@@ -7,7 +7,7 @@ const router = express.Router();
 const { botManager } = require('./bot-manager');
 const db = require('./database');
 const { signToken, hashPassword, authMiddleware, adminOnly, canAccessUin } = require('./auth');
-const gameConfig = require('../src/gameConfig');
+const gameConfig = require('./gameConfig');
 
 // ============================================================
 //  认证 (不需要 token)
@@ -157,7 +157,7 @@ router.post('/accounts/add-by-code', async (req, res) => {
 router.get('/accounts', (req, res) => {
     try {
         let accounts = botManager.listAccounts();
-        
+
         // 获取当前用户的信息和权限列表
         const adminUser = db.getAdminUserById(req.user.id);
         const allowed = (adminUser?.allowed_uins || '')
@@ -192,20 +192,20 @@ router.get('/accounts', (req, res) => {
             const displayUin = isWx ? '微信用户' : a.uin;
 
             if (isOwn) {
-                return { 
-                    ...a, 
-                    isOwn: true, 
+                return {
+                    ...a,
+                    isOwn: true,
                     displayUin,
-                    avatar: avatarUrl 
+                    avatar: avatarUrl
                 };
             } else {
                 const maskedUin = isWx ? '微信用户' : (a.uin.slice(0, 3) + '****' + a.uin.slice(-2));
                 const maskedNick = a.nickname ? a.nickname.charAt(0) + '***' : '隐藏用户';
-                
+
                 return {
                     ...a,
                     uin: a.uin, // 保留真实uin用于前端key和路由
-                    displayUin: maskedUin, 
+                    displayUin: maskedUin,
                     nickname: maskedNick,
                     isOwn: false,
                     avatar: avatarUrl

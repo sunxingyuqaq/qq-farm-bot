@@ -18,9 +18,9 @@ const {
     getPlantNameBySeedId, getPlantName, getPlantExp,
     formatGrowTime, getPlantGrowTime, getItemName, getFruitName,
     getPlantRanking,
-} = require('../src/gameConfig');
+} = require('./gameConfig');
 
-const seedShopData = require('../tools/seed-shop-merged-export.json');
+const seedShopData = require('./seed-shop-merged-export.json');
 const FRUIT_ID_SET = new Set(
     ((seedShopData && seedShopData.rows) || [])
         .map(row => Number(row.fruitId))
