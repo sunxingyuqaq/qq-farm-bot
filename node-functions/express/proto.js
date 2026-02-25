@@ -10,6 +10,7 @@ let root = null;
 const types = {};
 
 async function loadProto() {
+    console.log('当前目录地址是', __dirname);
     console.log('[Server] 加载 Proto 定义...');
     const protoDir = path.join(__dirname, './');
     console.log('[Server] 加载 Proto 根对象...', protoDir);
