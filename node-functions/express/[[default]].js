@@ -1,6 +1,6 @@
 import express from 'express';
 
-import {SocketServer} from "socket.io";
+import { Server as SocketServer } from 'socket.io';
 import gameConfig, {loadConfigs} from "./gameConfig";
 
 // ---------- 数据库 ----------
