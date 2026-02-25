@@ -49,7 +49,7 @@ let db = null;
 /** 将 sql.js 查询结果转为对象数组 */
 function queryAll(sql, params = []) {
     if (db == null) {
-        initDatabase().catch(e=> {
+        initDatabase().catch(e => {
             console.error('[DB] 初始化数据库失败:', e);
         });
     }
@@ -76,9 +76,12 @@ function run(sql, params = []) {
 
 /** 持久化到磁盘 */
 function saveToFile() {
-    if (!db) return;
+    if (!db) {
+        console.error('[DB] 数据库未初始化');
+        return;
+    }
     const dir = path.dirname(DB_PATH);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive: true});
     const data = db.export();
     fs.writeFileSync(DB_PATH, Buffer.from(data));
 }
@@ -92,13 +95,16 @@ async function initDatabase() {
 
     // 如果数据库文件已存在则加载
     if (fs.existsSync(DB_PATH)) {
+        console.log('[DB] 初始化数据库111...');
         const fileBuffer = fs.readFileSync(DB_PATH);
         db = new SQL.Database(fileBuffer);
     } else {
+        console.log('[DB] 初始化数据库222...');
         const dir = path.dirname(DB_PATH);
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive: true});
         db = new SQL.Database();
     }
+    console.log('[DB] 数据库初始化完成,', db);
 
     // 创建用户表
     db.run(`
@@ -164,7 +170,12 @@ async function initDatabase() {
     `);
 
     // 迁移: 添加 preferred_seed_id 列
-    try { db.run(`ALTER TABLE users ADD COLUMN preferred_seed_id INTEGER DEFAULT 0`); } catch (e) { /* 列已存在 */ }
+    try {
+        db.run(`ALTER TABLE users
+            ADD COLUMN preferred_seed_id INTEGER DEFAULT 0`);
+    } catch (e) {
+        console.log('[DB] 添加 preferred_seed_id 列失败');
+    }
 
     saveToFile();
 
@@ -189,8 +200,9 @@ function getUserById(id) {
     return queryOne('SELECT * FROM users WHERE id = ?', [id]);
 }
 
-function createUser({ uin, nickname = '', platform = 'qq', farmInterval = 10000, friendInterval = 10000 }) {
-    run(`INSERT INTO users (uin, nickname, platform, farm_interval, friend_interval) VALUES (?, ?, ?, ?, ?)`,
+function createUser({uin, nickname = '', platform = 'qq', farmInterval = 10000, friendInterval = 10000}) {
+    run(`INSERT INTO users (uin, nickname, platform, farm_interval, friend_interval)
+         VALUES (?, ?, ?, ?, ?)`,
         [uin, nickname, platform, farmInterval, friendInterval]);
     saveToFile();
     return getUserByUin(uin);
@@ -210,16 +222,18 @@ function updateUser(uin, updates) {
     }
     fields.push("updated_at = datetime('now','localtime')");
     values.push(uin);
-    run(`UPDATE users SET ${fields.join(', ')} WHERE uin = ?`, values);
+    run(`UPDATE users
+         SET ${fields.join(', ')}
+         WHERE uin = ?`, values);
     saveToFile();
     return getUserByUin(uin);
 }
 
 function updateUserStatus(uin, status) {
-    return updateUser(uin, { status });
+    return updateUser(uin, {status});
 }
 
-function updateUserGameState(uin, { nickname, gid, level, gold, exp }) {
+function updateUserGameState(uin, {nickname, gid, level, gold, exp}) {
     const updates = {};
     if (nickname !== undefined) updates.nickname = nickname;
     if (gid !== undefined) updates.gid = gid;
@@ -232,7 +246,7 @@ function updateUserGameState(uin, { nickname, gid, level, gold, exp }) {
 }
 
 function saveSession(uin, sessionData) {
-    return updateUser(uin, { session_data: sessionData });
+    return updateUser(uin, {session_data: sessionData});
 }
 
 function getSession(uin) {
@@ -250,19 +264,25 @@ function deleteUser(uin) {
 // ============ 日志持久化 ============
 
 function addLog(uin, tag, message, level = 'info') {
-    run(`INSERT INTO bot_logs (user_uin, tag, message, level) VALUES (?, ?, ?, ?)`,
+    run(`INSERT INTO bot_logs (user_uin, tag, message, level)
+         VALUES (?, ?, ?, ?)`,
         [uin, tag, message, level]);
 }
 
 function getRecentLogs(uin, limit = 100) {
     return queryAll(
-        `SELECT * FROM bot_logs WHERE user_uin = ? ORDER BY created_at DESC LIMIT ?`,
+        `SELECT *
+         FROM bot_logs
+         WHERE user_uin = ?
+         ORDER BY created_at DESC LIMIT ?`,
         [uin, limit]
     ).reverse();
 }
 
 function cleanOldLogs(daysToKeep = 7) {
-    run(`DELETE FROM bot_logs WHERE created_at < datetime('now', '-${daysToKeep} days', 'localtime')`);
+    run(`DELETE
+         FROM bot_logs
+         WHERE created_at < datetime('now', '-${daysToKeep} days', 'localtime')`);
     saveToFile();
 }
 
@@ -286,8 +306,9 @@ function getAllAdminUsers() {
     return queryAll('SELECT id, username, role, allowed_uins, created_at FROM admin_users ORDER BY created_at');
 }
 
-function createAdminUser({ username, passwordHash, role = 'user', allowedUins = '' }) {
-    run(`INSERT INTO admin_users (username, password_hash, role, allowed_uins) VALUES (?, ?, ?, ?)`,
+function createAdminUser({username, passwordHash, role = 'user', allowedUins = ''}) {
+    run(`INSERT INTO admin_users (username, password_hash, role, allowed_uins)
+         VALUES (?, ?, ?, ?)`,
         [username, passwordHash, role, allowedUins]);
     saveToFile();
     return getAdminUser(username);
@@ -302,7 +323,9 @@ function updateAdminUser(id, updates) {
     }
     if (fields.length === 0) return;
     values.push(id);
-    run(`UPDATE admin_users SET ${fields.join(', ')} WHERE id = ?`, values);
+    run(`UPDATE admin_users
+         SET ${fields.join(', ')}
+         WHERE id = ?`, values);
     saveToFile();
 }
 
@@ -317,13 +340,19 @@ function getAnnouncement() {
     return queryOne('SELECT * FROM announcements WHERE enabled = 1 ORDER BY updated_at DESC LIMIT 1');
 }
 
-function saveAnnouncement({ title, content }) {
+function saveAnnouncement({title, content}) {
     const existing = queryOne('SELECT * FROM announcements LIMIT 1');
     if (existing) {
-        run(`UPDATE announcements SET title = ?, content = ?, enabled = 1, updated_at = datetime('now','localtime') WHERE id = ?`,
+        run(`UPDATE announcements
+             SET title = ?,
+                 content = ?,
+                 enabled = 1,
+                 updated_at = datetime('now', 'localtime')
+             WHERE id = ?`,
             [title, content, existing.id]);
     } else {
-        run(`INSERT INTO announcements (title, content) VALUES (?, ?)`, [title, content]);
+        run(`INSERT INTO announcements (title, content)
+             VALUES (?, ?)`, [title, content]);
     }
     saveToFile();
     return getAnnouncement();
@@ -336,14 +365,17 @@ function ensureDefaultAdmin() {
     if (!admin) {
         // 默认密码: admin123 (sha256)
         const hash = crypto.createHash('sha256').update('admin123').digest('hex');
-        createAdminUser({ username: 'admin', passwordHash: hash, role: 'admin' });
+        createAdminUser({username: 'admin', passwordHash: hash, role: 'admin'});
         console.log('[DB] 已创建默认管理员 admin / admin123');
     }
     console.log('[DB] 检查默认管理员完成');
 }
 
 function closeDatabase() {
-    if (saveTimer) { clearInterval(saveTimer); saveTimer = null; }
+    if (saveTimer) {
+        clearInterval(saveTimer);
+        saveTimer = null;
+    }
     if (db) {
         saveToFile();
         db.close();
