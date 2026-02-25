@@ -12,7 +12,7 @@ const EventEmitter = require('events');
 const { BotInstance } = require('./bot-instance');
 const db = require('./database');
 const { requestQrLogin, getQrCodeBase64 } = require('./qr-service');
-const { CONFIG } = require('../src/config');
+const { CONFIG } = require('./config');
 
 class BotManager extends EventEmitter {
     constructor() {
