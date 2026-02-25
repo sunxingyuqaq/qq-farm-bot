@@ -91,7 +91,9 @@ let saveTimer = null;
 
 async function initDatabase() {
     console.log('[DB] 初始化数据库...');
-    const SQL = await initSqlJs();
+    const SQL = await initSqlJs({
+        locateFile: () => './sql-wasm.wasm'
+    });
 
     // 如果数据库文件已存在则加载
     if (fs.existsSync(DB_PATH)) {
