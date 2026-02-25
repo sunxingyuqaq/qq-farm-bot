@@ -4,7 +4,7 @@ import {SocketServer} from "socket.io";
 import gameConfig, {loadConfigs} from "../src/gameConfig";
 
 // ---------- 数据库 ----------
-import db from '../src/database';
+import db from './database';
 
 // ---------- BotManager ----------
 import {botManager} from '../src/bot-manager';
