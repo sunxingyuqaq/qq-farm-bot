@@ -91,8 +91,11 @@ let saveTimer = null;
 
 async function initDatabase() {
     console.log('[DB] 初始化数据库...');
+    // 读取 wasm 文件
+    const wasmBinary = fs.readFileSync(path.join(__dirname, './sql-wasm.wasm'));
+    console.log('initSqlJs', initSqlJs);
     const SQL = await initSqlJs({
-        locateFile: () => './sql-wasm.wasm'
+        wasmBinary
     });
 
     // 如果数据库文件已存在则加载
