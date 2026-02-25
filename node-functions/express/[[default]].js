@@ -1,17 +1,17 @@
 import express from 'express';
 
 import {SocketServer} from "socket.io";
-import gameConfig, {loadConfigs} from "../src/gameConfig";
+import gameConfig, {loadConfigs} from "./gameConfig";
 
 // ---------- 数据库 ----------
 import db from './database';
 
 // ---------- BotManager ----------
-import {botManager} from '../src/bot-manager';
+import {botManager} from './bot-manager';
 
 // ---------- 路由 ----------
-import apiRoutes from '../src/routes';
-import {loadProto} from "../src/proto";
+import apiRoutes from './routes';
+import {loadProto} from "./proto";
 
 console.log("加载游戏配置", loadConfigs, SocketServer, gameConfig);
 console.log("加载游戏配置", db, botManager, apiRoutes);
