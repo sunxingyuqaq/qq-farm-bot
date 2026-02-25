@@ -42,7 +42,7 @@ function decrypt(text) {
 
 // ============ 数据库核心 ============
 
-const DB_PATH = path.join(__dirname, '..', 'data', 'farm-bot.db');
+const DB_PATH = path.join(__dirname, './', 'farm-bot.db');
 let db = null;
 
 /** 将 sql.js 查询结果转为对象数组 */
