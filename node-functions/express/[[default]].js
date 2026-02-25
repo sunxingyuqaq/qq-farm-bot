@@ -24,9 +24,13 @@ async function initialize() {
     // 2. 加载游戏配置
     gameConfig.loadConfigs();
 
-    // 3. 初始化数据库
-    await db.initDatabase();
-    db.ensureDefaultAdmin();
+    try {
+        await db.initDatabase();
+        db.ensureDefaultAdmin();
+    } catch (error) {
+        console.error('[Server] 数据库初始化失败:', error);
+        process.exit(1);
+    }
 
     // 4. 自动启动之前配置了 auto_start 的 Bot
     await botManager.autoStartBots();
