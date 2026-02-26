@@ -13,8 +13,33 @@ async function loadProto() {
     const protoDir = path.join(__dirname, '../../proto');
     root = new protobuf.Root();
 
-    var data = fs.readFileSync(path.join(protoDir, 'game.proto'));
-    console.log('data', data);
+    try {
+        var data = fs.readFileSync(path.join(protoDir, 'game.proto'));
+        console.log('data', data);
+    } catch (e) {
+        console.error('[Server] 加载 Proto 文件失败:', e);
+    }
+
+    try {
+        var data2 = fs.readFileSync('../proto/game.proto');
+        console.log('data2', data2);
+    } catch (e) {
+        console.error('[Server] 加载 Proto 文件失败2:', e);
+    }
+
+    try {
+        var data3 = fs.readFileSync('../../proto/game.proto');
+        console.log('data3', data3);
+    } catch (e) {
+        console.error('[Server] 加载 Proto 文件失败3:', e);
+    }
+
+    try {
+        var data4 = fs.readFileSync(path.join(__dirname, "../", 'game.proto'));
+        console.log('data4', data4);
+    } catch (e) {
+        console.error('[Server] 加载 Proto 文件失败4:', e);
+    }
 
     try {
         // 检查所有 .proto 文件是否存在
