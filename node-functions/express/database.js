@@ -4,7 +4,8 @@
  */
 
 const initSqlJs = require('sql.js');
-const sqlWasm = require('sql.js/dist/sql-wasm.wasm');
+const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
@@ -95,7 +96,18 @@ async function initDatabase() {
     console.log('[DB] 初始化数据库...');
     console.log('initSqlJs', initSqlJs);
     const SQL = await initSqlJs({
-        locateFile: () => sqlWasm
+        locateFile: filename => {
+            if (filename.endsWith('.wasm')) {
+                const wasmPath = path.join(__dirname, 'node_modules', 'sql.js', 'dist', 'sql-wasm.wasm');
+                console.log('[DB] WASM 文件路径:', wasmPath);
+                if (!fs.existsSync(wasmPath)) {
+                    console.error('[DB] WASM 文件不存在:', wasmPath);
+                    throw new Error(`WASM 文件不存在: ${wasmPath}`);
+                }
+                return wasmPath;
+            }
+            return filename;
+        }
     });
     console.log(SQL);
 

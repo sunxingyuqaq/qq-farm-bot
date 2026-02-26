@@ -12,8 +12,10 @@ const types = {};
 async function loadProto() {
     const protoDir = path.join(__dirname, './');
     root = new protobuf.Root();
+
     try {
-            root.loadSync([
+        // 检查所有 .proto 文件是否存在
+        const filesToLoad = [
             path.join(protoDir, 'game.proto'),
             path.join(protoDir, 'userpb.proto'),
             path.join(protoDir, 'plantpb.proto'),
@@ -30,7 +32,17 @@ async function loadProto() {
             path.join(protoDir, 'emailpb.proto'),
             path.join(protoDir, 'qqvippb.proto'),
             path.join(protoDir, 'illustratedpb.proto'),
-        ], {keepCase: true});
+        ];
+
+        for (const file of filesToLoad) {
+            if (!fs.existsSync(file)) {
+                console.error('[Server] Proto 文件不存在:', file);
+                throw new Error(`Proto 文件不存在: ${file}`);
+            }
+        }
+
+        console.log('[Server] 所有 Proto 文件都存在，开始加载...');
+        root.loadSync(filesToLoad, {keepCase: true});
         console.log('[Server] Proto 文件加载成功');
     } catch (error) {
         console.error('[Server] 加载 Proto 失败:', error);
