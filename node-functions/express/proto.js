@@ -10,7 +10,7 @@ let root = null;
 const types = {};
 
 async function loadProto() {
-    const protoDir = path.join(__dirname, './');
+    const protoDir = path.join(__dirname, '../../proto');
     root = new protobuf.Root();
 
     try {
