@@ -11,17 +11,13 @@ const types = {};
 
 async function loadProto() {
     console.log('initialize当前目录地址是', __dirname,);
-    const protoDir = path.join(__dirname, '../../proto');
+    const protoDir = path.join(__dirname, '../proto');
     root = new protobuf.Root();
 
     try {
         // 检查所有 .proto 文件是否存在
         const filesToLoad = [
             path.join(protoDir, 'game.proto'),
-            '../../proto/game.proto',
-            '../../../proto/game.proto',
-            '../proto/game.proto',
-            'proto/game.proto',
             path.join(protoDir, 'userpb.proto'),
             path.join(protoDir, 'plantpb.proto'),
             path.join(protoDir, 'corepb.proto'),
@@ -42,9 +38,9 @@ async function loadProto() {
         for (const file of filesToLoad) {
             const absolutePath = path.resolve(file);
             if (!fs.existsSync(file)) {
-                console.error('[Server] Proto 文件不存在:', absolutePath);
+                console.error('[Server] Proto absolutePath 文件不存在:', absolutePath);
             } else {
-                console.log('[Server] Proto 文件实际位置:', absolutePath);
+                console.log('[Server] Proto absolutePath 文件实际位置:', absolutePath);
             }
         }
 
