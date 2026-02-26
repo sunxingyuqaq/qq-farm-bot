@@ -49,6 +49,7 @@ let db = null;
 /** 将 sql.js 查询结果转为对象数组 */
 function queryAll(sql, params = []) {
     if (db == null) {
+        console.log('[DB] queryAll数据库未初始化');
         initDatabase().catch(e => {
             console.error('[DB] 初始化数据库失败:', e);
         });

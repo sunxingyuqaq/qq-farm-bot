@@ -10,14 +10,15 @@ let root = null;
 const types = {};
 
 async function loadProto() {
-    console.log('当前目录地址是', __dirname);
+    console.log('loadProto当前目录地址是', __dirname);
     console.log('[Server] 加载 Proto 定义...');
     const protoDir = path.join(__dirname, './');
     console.log('[Server] 加载 Proto 根对象...', protoDir);
     root = new protobuf.Root();
-    console.log('[Server] 加载 Proto 根对象root=', root);
+    console.log('[Server] 加载 Proto 根对象root.load=', root.load);
+    console.log('[Server] 加载 Proto 根对象root.lookupType=', root.lookupType);
     await root.load([
-        path.join(protoDir, 'game.proto'),
+        path.join(__dirname, 'game.proto'),
         path.join(protoDir, 'userpb.proto'),
         path.join(protoDir, 'plantpb.proto'),
         path.join(protoDir, 'corepb.proto'),
