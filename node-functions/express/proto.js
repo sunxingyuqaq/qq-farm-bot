@@ -10,6 +10,7 @@ let root = null;
 const types = {};
 
 async function loadProto() {
+    console.log('initialize当前目录地址是', __dirname,);
     const protoDir = path.join(__dirname, '../../proto');
     root = new protobuf.Root();
 

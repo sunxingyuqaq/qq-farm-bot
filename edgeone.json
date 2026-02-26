@@ -1,7 +1,8 @@
 {
   "node-functions": {
     "included_files": [
-      "proto/**"
+      "proto/**",
+      "node-functions/proto/**.proto"
     ],
     "external_node_modules": [
       "sql.js"
