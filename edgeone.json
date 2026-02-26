@@ -2,6 +2,7 @@
   "node-functions": {
     "included_files": [
       "server/**",
+      "tools/**",
       "node-functions/proto/**.proto"
     ]
   },
