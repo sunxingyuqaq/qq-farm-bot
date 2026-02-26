@@ -40,10 +40,11 @@ async function loadProto() {
         ];
 
         for (const file of filesToLoad) {
+            const absolutePath = path.resolve(file);
             if (!fs.existsSync(file)) {
-                console.error('[Server] Proto 文件不存在:', file);
+                console.error('[Server] Proto 文件不存在:', absolutePath);
             } else {
-                console.log('[Server] 加载 Proto 文件:', file);
+                console.log('[Server] Proto 文件实际位置:', absolutePath);
             }
         }
 

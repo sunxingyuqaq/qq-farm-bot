@@ -1,11 +1,8 @@
 {
   "node-functions": {
     "included_files": [
-      "proto/**",
+      "server/**",
       "node-functions/proto/**.proto"
-    ],
-    "external_node_modules": [
-      "sql.js"
     ]
   },
   "rewrites": [
