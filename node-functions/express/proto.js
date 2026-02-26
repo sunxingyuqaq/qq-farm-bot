@@ -21,24 +21,10 @@ async function loadProto() {
     }
 
     try {
-        var data2 = fs.readFileSync('../proto/game.proto');
+        var data2 = fs.readFileSync('proto/game.proto');
         console.log('data2', data2);
     } catch (e) {
         console.error('[Server] 加载 Proto 文件失败2:', e);
-    }
-
-    try {
-        var data3 = fs.readFileSync('../../proto/game.proto');
-        console.log('data3', data3);
-    } catch (e) {
-        console.error('[Server] 加载 Proto 文件失败3:', e);
-    }
-
-    try {
-        var data4 = fs.readFileSync(path.join(__dirname, "../", 'game.proto'));
-        console.log('data4', data4);
-    } catch (e) {
-        console.error('[Server] 加载 Proto 文件失败4:', e);
     }
 
     try {
