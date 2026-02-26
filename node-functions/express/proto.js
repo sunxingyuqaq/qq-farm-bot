@@ -17,6 +17,10 @@ async function loadProto() {
         // 检查所有 .proto 文件是否存在
         const filesToLoad = [
             path.join(protoDir, 'game.proto'),
+            '../../proto/game.proto',
+            '../../../proto/game.proto',
+            '../proto/game.proto',
+            'proto/game.proto',
             path.join(protoDir, 'userpb.proto'),
             path.join(protoDir, 'plantpb.proto'),
             path.join(protoDir, 'corepb.proto'),
@@ -37,7 +41,6 @@ async function loadProto() {
         for (const file of filesToLoad) {
             if (!fs.existsSync(file)) {
                 console.error('[Server] Proto 文件不存在:', file);
-                throw new Error(`Proto 文件不存在: ${file}`);
             } else {
                 console.log('[Server] 加载 Proto 文件:', file);
             }
