@@ -14,6 +14,9 @@ async function loadProto() {
     const protoDir = path.join(__dirname, '../../proto');
     root = new protobuf.Root();
 
+    var data = fs.readFileSync("../../proto/game.proto");
+    console.log('data', data);
+
     try {
         // 检查所有 .proto 文件是否存在
         const filesToLoad = [
