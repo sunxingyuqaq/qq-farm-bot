@@ -10,31 +10,32 @@ let root = null;
 const types = {};
 
 async function loadProto() {
-    console.log('loadProto当前目录地址是', __dirname);
-    console.log('[Server] 加载 Proto 定义...');
     const protoDir = path.join(__dirname, './');
-    console.log('[Server] 加载 Proto 根对象...', protoDir);
     root = new protobuf.Root();
-    console.log('[Server] 加载 Proto 根对象root.load=', root.load);
-    console.log('[Server] 加载 Proto 根对象root.lookupType=', root.lookupType);
-    await root.load([
-        path.join(__dirname, 'game.proto'),
-        path.join(protoDir, 'userpb.proto'),
-        path.join(protoDir, 'plantpb.proto'),
-        path.join(protoDir, 'corepb.proto'),
-        path.join(protoDir, 'shoppb.proto'),
-        path.join(protoDir, 'friendpb.proto'),
-        path.join(protoDir, 'visitpb.proto'),
-        path.join(protoDir, 'notifypb.proto'),
-        path.join(protoDir, 'taskpb.proto'),
-        path.join(protoDir, 'itempb.proto'),
-        // 新增的 proto 文件
-        path.join(protoDir, 'mallpb.proto'),
-        path.join(protoDir, 'sharepb.proto'),
-        path.join(protoDir, 'emailpb.proto'),
-        path.join(protoDir, 'qqvippb.proto'),
-        path.join(protoDir, 'illustratedpb.proto'),
-    ], { keepCase: true });
+    try {
+        await root.load([
+            path.join(protoDir, 'game.proto'),
+            path.join(protoDir, 'userpb.proto'),
+            path.join(protoDir, 'plantpb.proto'),
+            path.join(protoDir, 'corepb.proto'),
+            path.join(protoDir, 'shoppb.proto'),
+            path.join(protoDir, 'friendpb.proto'),
+            path.join(protoDir, 'visitpb.proto'),
+            path.join(protoDir, 'notifypb.proto'),
+            path.join(protoDir, 'taskpb.proto'),
+            path.join(protoDir, 'itempb.proto'),
+            // 新增的 proto 文件
+            path.join(protoDir, 'mallpb.proto'),
+            path.join(protoDir, 'sharepb.proto'),
+            path.join(protoDir, 'emailpb.proto'),
+            path.join(protoDir, 'qqvippb.proto'),
+            path.join(protoDir, 'illustratedpb.proto'),
+        ], {keepCase: true});
+        console.log('[Server] Proto 文件加载成功');
+    } catch (error) {
+        console.error('[Server] 加载 Proto 失败:', error);
+        throw error;
+    }
 
     // 网关
     types.GateMessage = root.lookupType('gatepb.Message');
@@ -180,4 +181,4 @@ function getRoot() {
     return root;
 }
 
-module.exports = { loadProto, types, getRoot };
+module.exports = {loadProto, types, getRoot};
