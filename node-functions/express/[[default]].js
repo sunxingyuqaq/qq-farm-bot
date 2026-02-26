@@ -8,6 +8,8 @@ import db from './database';
 
 // ---------- BotManager ----------
 import {botManager} from './bot-manager';
+import path from 'path';
+import fs from 'fs';
 
 // ---------- 路由 ----------
 import apiRoutes from './routes';
@@ -57,6 +59,22 @@ app.use((req, res, next) => {
 
 // API 路由
 app.use('/api', apiRoutes);
+
+// 静态文件 - 前端打包产物
+const distPath = path.join(__dirname, '../../', 'web', 'dist');
+console.log('distPath', distPath);
+
+if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+    // SPA fallback
+    app.get('*', (req, res) => {
+        if (!req.path.startsWith('/api') && !req.path.startsWith('/socket.io')) {
+            res.sendFile(path.join(distPath, 'index.html'));
+        }
+    });
+} else {
+    console.log('[Server] 前端未构建, 请运行 npm run build:web');
+}
 
 // 创建 HTTP 服务器（Socket.io 需要）
 const server = http.createServer(app);
