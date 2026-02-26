@@ -17,7 +17,7 @@ import { maskAccountsPublic } from './account-utils';
 // 初始化配置
 async function initialize() {
     // 1. 加载 Proto 定义 (所有 Bot 实例共享)
-    console.log('initialize当前目录地址是', __dirname);
+    console.log('initialize当前目录地址是', __dirname,);
     await loadProto();
     console.log('[Server] Proto 定义已加载');
 
