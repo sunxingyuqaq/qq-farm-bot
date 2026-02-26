@@ -1,4 +1,10 @@
 {
+  "node-functions": {
+    "included_files": [
+      "proto/**",
+      "tools/**"
+    ]
+  },
   "rewrites": [
     {
       "source": "/api/*",
