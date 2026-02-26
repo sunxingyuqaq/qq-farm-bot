@@ -10,11 +10,10 @@ let root = null;
 const types = {};
 
 async function loadProto() {
-    console.log('initialize当前目录地址是', __dirname,);
     const protoDir = path.join(__dirname, '../../proto');
     root = new protobuf.Root();
 
-    var data = fs.readFileSync("../../proto/game.proto");
+    var data = fs.readFileSync(path.join(protoDir, 'game.proto'));
     console.log('data', data);
 
     try {

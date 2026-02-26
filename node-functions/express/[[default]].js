@@ -20,6 +20,10 @@ import { maskAccountsPublic } from './account-utils';
 async function initialize() {
     // 1. 加载 Proto 定义 (所有 Bot 实例共享)
     console.log('initialize当前目录地址是', __dirname,);
+
+    const parentDir = path.join(__dirname, '../..'); // 根目录路径
+    console.log('根目录内容:', fs.readdirSync(parentDir));
+
     await loadProto();
     console.log('[Server] Proto 定义已加载');
 
