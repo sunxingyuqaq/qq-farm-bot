@@ -4,8 +4,6 @@
  */
 
 const initSqlJs = require('sql.js');
-const fs = require('fs');
-const path = require('path');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
