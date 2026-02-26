@@ -13,7 +13,7 @@ async function loadProto() {
     const protoDir = path.join(__dirname, './');
     root = new protobuf.Root();
     try {
-        await root.load([
+            root.loadSync([
             path.join(protoDir, 'game.proto'),
             path.join(protoDir, 'userpb.proto'),
             path.join(protoDir, 'plantpb.proto'),
