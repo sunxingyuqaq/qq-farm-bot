@@ -4,7 +4,7 @@
 
 const protobuf = require('protobufjs');
 const path = require('path');
-
+const fs = require('fs');
 // Proto 根对象与所有消息类型
 let root = null;
 const types = {};
@@ -38,12 +38,14 @@ async function loadProto() {
             if (!fs.existsSync(file)) {
                 console.error('[Server] Proto 文件不存在:', file);
                 throw new Error(`Proto 文件不存在: ${file}`);
+            } else {
+                console.log('[Server] 加载 Proto 文件:', file);
             }
         }
 
         console.log('[Server] 所有 Proto 文件都存在，开始加载...');
-        root.loadSync(filesToLoad, {keepCase: true});
-        console.log('[Server] Proto 文件加载成功');
+        var protoFiles = root.loadSync(filesToLoad, {keepCase: true});
+        console.log('[Server] Proto 文件加载成功', protoFiles);
     } catch (error) {
         console.error('[Server] 加载 Proto 失败:', error);
         throw error;
