@@ -1,8 +1,7 @@
 {
   "node-functions": {
     "included_files": [
-      "proto/**",
-      "tools/**"
+      "assets/**"
     ]
   },
   "rewrites": [
