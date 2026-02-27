@@ -2,8 +2,7 @@
   "node-functions": {
     "included_files": [
       "proto/**",
-      "tools/**",
-      "node-functions/proto/**"
+      "tools/**"
     ]
   },
   "rewrites": [
